@@ -4,6 +4,12 @@ const express = require('express');
 
 const app = express();
 
+const connectDB = require('./config/db');
+
+// Connect the MongoDB
+
+connectDB();
+
 // ******* API URL SET-UP FOR OUTSIDE WORLD ACCESS  ******* //
 
 // API endpoint 'http://localhost:5000/'
