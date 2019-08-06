@@ -46,7 +46,7 @@ router.post(
       await saveNewUser.save();
 
       // Inorder to create a JWT toke we need to create a payload, pass secret from default.json
-
+      // this ID is the data for future reference when we fetch items related to a user
       const payload = {
         user: {
           id: saveNewUser._id

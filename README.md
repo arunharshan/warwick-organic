@@ -45,4 +45,11 @@ https://github.com/arunharshan/warwick-organic/commit/b9326ace5d7a37d58c048773b9
 
 https://github.com/arunharshan/warwick-organic/commit/05ff2978876865823fa21d1c7def4ef40b81e4a2
 
-# Setting Up Modals and Schema and validation and password encryption
+# Setting Up Modals, Schema, Validation, Password encryption, JWT token on Save new user
+
+https://github.com/arunharshan/warwick-organic/commit/a45049ecd98b619ec37ba10f1aee1a15546618cd
+
+# 1. Login and token setting. 2. Check the user status by sending token to header
+
+how to login and return a token on success;
+Check the user status by sending header token and get the user details based on token payload (db user ID is used as a key to compare and retrive user info from JWT token payload)
