@@ -35,10 +35,14 @@ Following steps are for non git users
 
 6. To run the server: npm run start, which will run the page in localhost://5000 if the dev/prod in server.js is not configured.
 
-Go throught the simple step by step setup process below:
+Go throught the simple step by step setup process below:(ignore package.json and other common bundle files)
 
 # Initial setup of Express server:
 
 https://github.com/arunharshan/warwick-organic/commit/b9326ace5d7a37d58c048773b9983ce187ed83d9
 
 # Initial setup of MongoDB connection with express
+
+https://github.com/arunharshan/warwick-organic/commit/05ff2978876865823fa21d1c7def4ef40b81e4a2
+
+# Setting Up Modals and Schema and validation and password encryption

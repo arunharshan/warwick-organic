@@ -10,6 +10,10 @@ const connectDB = require('./config/db');
 
 connectDB();
 
+// Add middleware to accept the JSON format
+
+app.use(express.json({ extend: false }));
+
 // ******* API URL SET-UP FOR OUTSIDE WORLD ACCESS  ******* //
 
 // API endpoint 'http://localhost:5000/'

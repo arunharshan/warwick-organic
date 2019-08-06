@@ -2,14 +2,72 @@
 
 const express = require('express');
 const router = express.Router();
+const { check, validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+
+const user = require('../models/User'); // get user modal
 
 // Create a new user
 // Public access api
 // Use POST method
 
-router.post('/new', (req, res) => {
-  res.send('create my user info');
-});
+router.post(
+  '/new',
+  [
+    check('name', 'Name should be min of 3 characters').isLength({ min: 3 }),
+    check('email', 'Invaid email format').isEmail(),
+    check('password', 'Password should be min of 5 characters').isLength({
+      min: 5
+    })
+  ],
+  async (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) return res.status(400).json({ error: error.array() });
+
+    // fetch input from the API request param
+    const { name, email, password } = req.body;
+    try {
+      // check if the email already exist in the database
+      let isEmailExist = await user.findOne({ email });
+      if (isEmailExist)
+        return res.status(400).json({ msg: 'The email is already taken.' });
+
+      saveNewUser = new user({
+        email,
+        name,
+        password
+      });
+      // encrypt password. alt method instead of using 10 is: await bcrypt.genSalt(10);
+      saveNewUser.password = await bcrypt.hash(password, 10);
+
+      // save to user table
+      await saveNewUser.save();
+
+      // Inorder to create a JWT toke we need to create a payload, pass secret from default.json
+
+      const payload = {
+        user: {
+          id: saveNewUser._id
+        }
+      };
+
+      jwt.sign(
+        payload,
+        config.get('jwtSecret'),
+        { expiresIn: 360000 },
+        (error, token) => {
+          if (error) throw error;
+          res.json({ token });
+        }
+      ); // 3600 in production or optional filed.
+    } catch (error) {
+      console.log('--Sever error--', error.message);
+      res.status(500).send('Server error, could not save new user info.');
+    }
+  }
+);
 
 // View user info
 // Private access only with token
