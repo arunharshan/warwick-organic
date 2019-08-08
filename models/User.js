@@ -26,4 +26,4 @@ const UserSchema = mongoose.Schema({
 });
 
 // 'user' is the name which is used to represent the UserSchema outside
-module.exports = mongoose.model('user', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

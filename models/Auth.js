@@ -16,4 +16,4 @@ const AuthSchema = mongoose.Schema({
 });
 
 // 'auth' is the name which is used to represent the AuthSchema outside
-module.exports = mongoose.model('auth', AuthSchema);
+module.exports = mongoose.model('Auth', AuthSchema);

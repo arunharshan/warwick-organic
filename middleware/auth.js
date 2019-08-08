@@ -19,11 +19,9 @@ module.exports = (req, res, next) => {
   // and replace/assign req.user with the payload of decoded 'user' info
   try {
     const decode = jwt.verify(token, config.get('jwtSecret'));
-    console.log('decoded--', decode);
     req.user = decode.user;
     next(); // kind of return or jump to next
   } catch (error) {
-    console.log('Server error- checking token', error);
     res.status(401).json({ msg: 'Invalid token. Authorization denied' });
   }
 };

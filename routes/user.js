@@ -7,7 +7,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
-const user = require('../models/User'); // get user modal
+const User = require('../models/User'); // get user modal
+
+const auth = require('../middleware/auth');
 
 // Create a new user
 // Public access api
@@ -30,11 +32,11 @@ router.post(
     const { name, email, password } = req.body;
     try {
       // check if the email already exist in the database
-      let isEmailExist = await user.findOne({ email });
+      let isEmailExist = await User.findOne({ email });
       if (isEmailExist)
         return res.status(400).json({ msg: 'The email is already taken.' });
 
-      saveNewUser = new user({
+      saveNewUser = new User({
         email,
         name,
         password
@@ -63,7 +65,6 @@ router.post(
         }
       ); // 3600 in production or optional filed.
     } catch (error) {
-      console.log('--Sever error--', error.message);
       res.status(500).send('Server error, could not save new user info.');
     }
   }
@@ -71,26 +72,59 @@ router.post(
 
 // View user info
 // Private access only with token
-// Use POST method
+// Use GET method
+// you can resuse the /auth router instead of /user/view
 
-router.post('/view', (req, res) => {
-  res.send('view my user info');
+router.get('/view', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ msg: 'Server authentication error' });
+  }
 });
 
 // Update user info
 // Private access using Token
 // Use PUT method
 
-router.put('/update/:id', (req, res) => {
-  res.send('updated my profile');
+router.put('/update/:id', auth, async (req, res) => {
+  const { name, email, password } = req.body;
+
+  // create a new object with new input values
+  const updatedUserFileds = {};
+  if (name) updatedUserFileds.name = name;
+  if (email) updatedUserFileds.email = email;
+  if (password) updatedUserFileds.password = await bcrypt.hash(password, 10);
+
+  try {
+    // validate the API passed param ID is matching with DB user ID
+    let user = await user.findById(req.params.id);
+    if (!user)
+      return res.status(404).json({ msg: 'unable to find the user info' });
+
+    // Check the authorized person is performing the edit
+
+    if (users.id.toString() !== req.user.id) {
+      return res.status(404).json({ msg: 'unauthorized user access' });
+    }
+
+    user = await User.findByIdAndUpdate(req.params.id, {
+      $set: updatedUserFileds
+    });
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ msg: 'Server error' });
+  }
 });
 
 // Delete user info
 // Private access using Token
 // Use PUT method
 
-router.delete('/delete/:id', (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   res.send('delete my profile');
+  user = await User.findByIdAndRemove(req.params.id);
 });
 
 module.exports = router;

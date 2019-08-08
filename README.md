@@ -33,7 +33,7 @@ Following steps are for non git users
 
 5. Create a .gitignore file and add the plain text, node_modules/
 
-6. To run the server: npm run start, which will run the page in localhost://5000 if the dev/prod in server.js is not configured.
+6. To <b>run the server: npm run server</b>, which will run the page in localhost://5000 if the dev/prod in server.js is not configured.
 
 Go throught the simple step by step setup process below:(ignore package.json and other common bundle files)
 
@@ -53,3 +53,7 @@ https://github.com/arunharshan/warwick-organic/commit/a45049ecd98b619ec37ba10f1a
 
 how to login and return a token on success;
 Check the user status by sending header token and get the user details based on token payload (db user ID is used as a key to compare and retrive user info from JWT token payload)
+
+https://github.com/arunharshan/warwick-organic/commit/a65acb991615e4f9689b5b2b8cadbbf83338b085
+
+# Logout( need to work on it) + code clean up change the Modal name to upper case eg: user to User

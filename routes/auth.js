@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const auth = require('../middleware/auth');
 
-const user = require('../models/User');
-//const auth = require('../models/Auth'); // get user modal
+const User = require('../models/User');
 
 // Check user status, get Signed In user info,
 // Returns the user info based on the ID(jwt token payload while creating a new user or login).
@@ -17,20 +16,14 @@ const user = require('../models/User');
 // Use get method
 
 router.get('/', auth, async (req, res) => {
-  console.log(
-    req.user.id,
-    'user ID before-',
-    await user.findById('5d49d65d1b70062edcbc4ec5')
-  );
   try {
     // get user info from database exclude password using the passed ID.
     // req.user is passed from the auth middleware
     // Return the logged in user info based on the ID
 
-    const users = await user.findById(req.user.id).select('-password');
-    res.json({ users });
+    const user = await User.findById(req.user.id).select('-password');
+    res.json({ user });
   } catch (error) {
-    console.log('Server authentication error', error.message);
     res.status(500).json({ msg: 'Server authentication error' });
   }
 });
@@ -55,15 +48,15 @@ router.post(
     const { email, password } = req.body;
     try {
       // find the email exist in the user table
-      let users = await user.findOne({ email });
+      let user = await User.findOne({ email });
 
-      if (!users)
+      if (!user)
         return res
           .status(400)
           .json({ errors: 'Invalid email address. Credentials not matching' });
 
       // password match: compare with API input and db password after encryption
-      const isMatch = await bcrypt.compare(password, users.password);
+      const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch)
         return res
@@ -72,10 +65,9 @@ router.post(
 
       // create a token on successful login. user._id is from database;
       // this ID is the data for future reference when we fetch items related to a user
-      console.log(users._id);
       const payload = {
         user: {
-          id: users._id
+          id: user._id
         }
       };
 
@@ -89,7 +81,6 @@ router.post(
         }
       );
     } catch (error) {
-      console.log('--Sever error--', error.message);
       res.status(500).send('Server error, could not login.');
     }
   }
@@ -100,6 +91,11 @@ router.post(
 // Use get method
 
 router.get('/logout', (req, res) => {
+  try {
+  } catch (error) {
+    res.status(500).json({ msg: 'Server authentication error-Logout' });
+  }
+
   res.send(`I'm logged out`);
 });
 
