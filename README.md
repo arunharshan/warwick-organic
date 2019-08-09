@@ -1,10 +1,11 @@
-# warwick-organic
-
-MERN stack Retail store for selling Organic products from farmers
+Info:
+This is a work in progress project.
 
 # Technologies:
 
-React 16.8 MongoDB, Express (MERN stack)
+React 16.8 MongoDB, Express (MERN stack), JWT token, Bcrypt, 
+
+Git clone the repo; npm install and npm run server 
 
 # Step:1 How to setup a basic Express server:
 
